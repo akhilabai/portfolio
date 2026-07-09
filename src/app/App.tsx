@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import emailjs from "@emailjs/browser";
 import {
   Moon, Sun, Menu, X, Download, ArrowRight, Mail,
   Phone, MapPin, Github, Linkedin, ExternalLink, ChevronUp,
@@ -27,9 +28,9 @@ const NAV = [
 
 const STATS = [
   { value: "2+",          label: "Years Experience"  },
-  { value: "20+",         label: "UI Screens"         },
-  { value: "Healthcare",  label: "Domain"             },
-  { value: "Responsive",  label: "Design"             },
+  { value: "20+",         label: "Projects " },
+  { value: "10+",  label: "Clients"             },
+  { value: "Minimal",  label: " Design"             },
 ];
 
 const HIGHLIGHTS = [
@@ -258,12 +259,51 @@ export default function App() {
     setMenuOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    await emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID,
+      {
+        name: form.name,
+        email: form.email,
+        subject: form.subject,
+        title: form.subject,
+        message: form.message,
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    );
+
+    await emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_AUTOREPLY_TEMPLATE_ID,
+      {
+        name: form.name,
+        email: form.email,
+        subject: form.subject,
+        title: form.subject,
+        message: form.message,
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    );
+
     setSent(true);
-    setForm({ name: "", email: "", subject: "", message: "" });
-    setTimeout(() => setSent(false), 3500);
-  };
+
+    setForm({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    });
+
+    setTimeout(() => setSent(false), 5000);
+  } catch (error) {
+    console.error(error);
+    alert("Failed to send message.");
+  }
+};
 
   const bg   = dark ? "#0B0F19" : "#F8FAFC";
   const text = dark ? "#F8FAFC" : "#111827";
@@ -335,13 +375,18 @@ export default function App() {
               {dark ? <Sun size={15} /> : <Moon size={15} />}
             </button>
 
-            <button
-              onClick={() => go("contact")}
-              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-lg"
-              style={{ background: `linear-gradient(135deg, ${P}, ${S})`, boxShadow: `0 2px 14px ${P}40` }}
-            >
-              <Download size={13} /> Download Resume
-            </button>
+           <a
+  href="/AKHILA_Resume.pdf"
+  download="AKHILA_Resume.pdf"
+  className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 hover:shadow-lg"
+  style={{
+    background: `linear-gradient(135deg, ${P}, ${S})`,
+    boxShadow: `0 2px 14px ${P}40`,
+  }}
+>
+  <Download size={13} />
+  Download Resume
+</a>
 
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -473,12 +518,19 @@ export default function App() {
                 <Mail size={15} /> Contact Me
               </button>
 
-              <button
-                className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
-                style={{ background: `${A}15`, color: A, border: `1px solid ${A}30` }}
-              >
-                <Download size={15} /> Resume
-              </button>
+              <a
+  href="/AKHILA_Resume.pdf"
+  download="AKHILA_Resume.pdf"
+  className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
+  style={{
+    background: `${A}15`,
+    color: A,
+    border: `1px solid ${A}30`,
+  }}
+>
+  <Download size={15} />
+  Resume
+</a>
             </div>
 
             {/* Stats */}
@@ -537,24 +589,24 @@ export default function App() {
             {/* Floating cards */}
             <FloatCard
               dark={dark}
-              label="Design Tool"
-              sublabel="Figma Expert"
+              label="UX RESEARCH"
+              sublabel="User Research"
               color={P}
               delay="0s"
               className="top-4 -right-2 sm:right-0"
             />
             <FloatCard
               dark={dark}
-              label="Projects"
-              sublabel="20+ UI Screens"
+              label="PROTOTYPING"
+              sublabel="Low-Fi & High-Fi"
               color={A}
               delay="2.5s"
               className="bottom-12 -left-2 sm:left-0"
             />
             <FloatCard
               dark={dark}
-              label="Healthcare"
-              sublabel="eClinical Platforms"
+              label="DESIGN SYSTEM"
+              sublabel="Scalable UI"
               color={G}
               delay="1.2s"
               className="top-1/2 -translate-y-1/2 -right-4 sm:-right-6"
@@ -603,7 +655,7 @@ export default function App() {
                     className="px-3 py-1 rounded-full text-xs font-semibold"
                     style={{ background: `${P}18`, color: P }}
                   >
-                    UI/UX Designer · Andhra Pradesh, India
+                    UI/UX Designer · Hyderabad, India
                   </div>
                 </div>
 
@@ -983,7 +1035,7 @@ export default function App() {
                 {([
                   { icon: Mail,   label: "Email",    value: "akhilabai021@gmail.com", href: "mailto:akhilabai021@gmail.com", color: P },
                   { icon: Phone,  label: "Phone",    value: "+91 8317588766",         href: "tel:+918317588766",            color: S },
-                  { icon: MapPin, label: "Location", value: "Andhra Pradesh, India",  href: "#",                           color: A },
+                  { icon: MapPin, label: "Location", value: "Hyderabad, India",  href: "#",                           color: A },
                 ] as const).map(({ icon: Icon, label, value, href, color }) => (
                   <a
                     key={label}
@@ -1005,7 +1057,7 @@ export default function App() {
               </div>
 
               {/* Social buttons */}
-              <div className="flex gap-3">
+              {/* <div className="flex gap-3">
                 {([
                   { icon: Mail,         label: "Email",    href: "mailto:akhilabai021@gmail.com", color: P },
                   { icon: Linkedin,     label: "LinkedIn", href: "#",                             color: S },
@@ -1021,7 +1073,7 @@ export default function App() {
                     <Icon size={17} style={{ color }} />
                   </a>
                 ))}
-              </div>
+              </div> */}
 
               {/* Availability badge */}
               <div
@@ -1107,10 +1159,16 @@ export default function App() {
                 style={{ background: `linear-gradient(135deg, ${P}, ${S})`, boxShadow: `0 4px 20px ${P}40` }}
               >
                 {sent ? (
-                  <><CheckCircle size={16} /> Message Sent! I'll reply within 24h</>
-                ) : (
-                  <><Mail size={15} /> Send Message</>
-                )}
+  <>
+    <CheckCircle size={16} />
+    Message Sent!
+  </>
+) : (
+  <>
+    <Mail size={16} />
+    Send Message
+  </>
+)}
               </button>
             </form>
           </div>
